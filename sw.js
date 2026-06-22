@@ -5,6 +5,7 @@ const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
+  './reset.html',
   './css/animations.css',
   './css/app.css',
   './css/components.css',
@@ -70,14 +71,25 @@ self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   if (url.pathname.endsWith('/share-target') && event.request.method === 'POST') { event.respondWith(handleShare(event.request)); return; }
-  if (event.request.mode === 'navigate') { event.respondWith(fetch(event.request).catch(() => caches.match('/index.html'))); return; }
+  if (event.request.mode === 'navigate') { event.respondWith(networkFirst(event.request, new URL('./index.html', self.registration.scope).href)); return; }
   if (event.request.method !== 'GET') return;
+  if (url.origin === location.origin) { event.respondWith(networkFirst(event.request)); return; }
   event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(res => {
     const copy = res.clone();
-    if (url.origin === location.origin || /open-meteo|wikimedia|frankfurter|nominatim|overpass/i.test(url.hostname)) caches.open(RUNTIME_CACHE).then(cache => cache.put(event.request, copy));
+    if (/open-meteo|wikimedia|frankfurter|nominatim|overpass/i.test(url.hostname)) caches.open(RUNTIME_CACHE).then(cache => cache.put(event.request, copy));
     return res;
   }).catch(() => cached)));
 });
+async function networkFirst(request, fallbackUrl = null) {
+  const cache = await caches.open(RUNTIME_CACHE);
+  try {
+    const res = await fetch(request, { cache: 'no-store' });
+    if (res && res.ok) cache.put(request, res.clone());
+    return res;
+  } catch {
+    return (await caches.match(request)) || (fallbackUrl ? await caches.match(fallbackUrl) : undefined) || new Response('Offline and not cached yet.', { status: 503, headers: { 'Content-Type': 'text/plain' } });
+  }
+}
 async function handleShare(request) {
   const form = await request.formData();
   const shareId = `share-${Date.now()}`;
