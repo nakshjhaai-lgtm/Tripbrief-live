@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Refreshing TripBrief Live</title>
+  <style>
+    :root { --bg:#f6efe3; --ink:#151515; --passport:#17324d; --brass:#b88a44; }
+    body { margin:0; min-height:100svh; display:grid; place-items:center; background:radial-gradient(circle at 20% 10%, #fff7e8, transparent 34%), var(--bg); color:var(--ink); font-family: Avenir, "Avenir Next", Candara, sans-serif; }
+    main { width:min(560px, calc(100% - 2rem)); border:1px solid rgba(23,50,77,.14); border-radius:28px; background:rgba(255,255,255,.72); padding:2rem; box-shadow:0 24px 70px rgba(26,18,8,.14); }
+    h1 { font-family: Georgia, serif; font-size:clamp(2.4rem, 8vw, 4.6rem); line-height:.92; letter-spacing:-.05em; margin:.2rem 0 1rem; }
+    p { line-height:1.55; color:#6d675e; }
+    .bar { height:10px; border-radius:999px; overflow:hidden; background:rgba(23,50,77,.12); margin-top:1.2rem; }
+    .bar span { display:block; height:100%; width:45%; border-radius:inherit; background:linear-gradient(90deg,var(--passport),var(--brass)); animation:load 1.1s ease-in-out infinite alternate; }
+    @keyframes load { to { transform:translateX(125%); } }
+  </style>
+</head>
+<body>
+  <main>
+    <p><strong>TripBrief Live</strong></p>
+    <h1>Refreshing the demo.</h1>
+    <p>Clearing the old offline app shell so the calmer UX appears immediately.</p>
+    <div class="bar" aria-hidden="true"><span></span></div>
+  </main>
+  <script>
+    (async () => {
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(reg => reg.unregister()));
+        }
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.filter(k => k.startsWith('tripbrief-live')).map(k => caches.delete(k)));
+        }
+      } catch (error) {
+        console.warn('Refresh cleanup was partial:', error);
+      }
+      location.replace('./?fresh=831eb34-' + Date.now());
+    })();
+  </script>
+</body>
+</html>
