@@ -1,0 +1,1 @@
+export function revealForHold(button, target) { const start = () => target.classList.add('revealed'); const end = () => target.classList.remove('revealed'); button.addEventListener('pointerdown', start); button.addEventListener('pointerup', end); button.addEventListener('pointerleave', end); }

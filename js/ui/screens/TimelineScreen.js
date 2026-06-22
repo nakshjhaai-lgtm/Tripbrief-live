@@ -1,0 +1,3 @@
+import { state } from '../../state.js';
+import { eventCard } from '../components.js';
+export function TimelineScreen() { const events = [...state.events].sort((a,b)=>String(a.start||'9999').localeCompare(String(b.start||'9999'))); return `<section class="screen-enter reveal-stagger"><p class="eyebrow">Auto-assembled</p><h1 class="display" style="font-size:clamp(3rem,10vw,6rem);margin:.2rem 0 1rem">Timeline</h1><div class="timeline">${events.length ? events.map(eventCard).join('') : '<div class="empty">No parsed events yet. Dump a hotel screenshot or booking text to create candidates.</div>'}</div></section>`; }

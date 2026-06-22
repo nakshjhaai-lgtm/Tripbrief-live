@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-theme="tripbrief-light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#17324d" />
+  <meta name="description" content="TripBrief Live — Online autopilot. Offline lifeboat." />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./assets/icons/icon-192.png" />
+  <link rel="stylesheet" href="./css/theme.css" />
+  <link rel="stylesheet" href="./css/animations.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <link rel="stylesheet" href="./css/app.css" />
+  <title>TripBrief Live</title>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <span class="orb orb-a"></span><span class="orb orb-b"></span><span class="orb orb-c"></span>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <a class="skip-link" href="#app">Skip to app</a>
+  <div id="installRail" class="install-rail" hidden>
+    <span>Install the lifeboat before you need it.</span>
+    <button id="installButton" class="button tiny">Install</button>
+  </div>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="brand-mark" data-route="home" aria-label="TripBrief home">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 8h25l5 5v27H9z"/><path d="M34 8v8h8"/><path d="M16 27h16M16 33h11M17 15l6 5 8-8"/></svg>
+      </button>
+      <div class="brand-copy">
+        <p class="eyebrow">Private travel folio</p>
+        <strong>TripBrief Live</strong>
+      </div>
+      <div class="top-actions">
+        <span id="networkBadge" class="status-pill">Checking…</span>
+        <button class="icon-button" data-route="settings" aria-label="Settings">⌁</button>
+      </div>
+    </header>
+
+    <main id="app" tabindex="-1" aria-live="polite"></main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button data-route="home"><span>⌂</span>Home</button>
+      <button data-route="dump"><span>＋</span>Dump</button>
+      <button data-route="timeline"><span>↟</span>Timeline</button>
+      <button data-route="panic"><span>!</span>Panic</button>
+      <button data-route="pack"><span>▣</span>Pack</button>
+    </nav>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+  <template id="modalTemplate"><div class="modal-backdrop"><section class="modal-card"></section></div></template>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+export function animateNumber(el, from, to, duration = 700) { const start = performance.now(); function frame(now) { const t = Math.min(1, (now - start) / duration); const eased = 1 - Math.pow(1 - t, 3); el.textContent = Math.round(from + (to - from) * eased); if (t < 1) requestAnimationFrame(frame); } requestAnimationFrame(frame); }

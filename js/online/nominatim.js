@@ -1,0 +1,1 @@
+export async function geocodeOnce(query) { const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`); if (!res.ok) throw new Error('Geocode failed'); return (await res.json())[0] || null; }
