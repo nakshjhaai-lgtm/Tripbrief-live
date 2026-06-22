@@ -1,5 +1,5 @@
-const CACHE_NAME = 'tripbrief-live-shell-v1';
-const RUNTIME_CACHE = 'tripbrief-live-runtime-v1';
+const CACHE_NAME = 'tripbrief-live-shell-v2';
+const RUNTIME_CACHE = 'tripbrief-live-runtime-v2';
 const SHARE_CACHE = 'tripbrief-live-share-v1';
 const APP_SHELL = [
   './',
