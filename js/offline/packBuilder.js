@@ -9,7 +9,7 @@ export const readinessChecks = [
 export function calculateReadiness({ trip, events, docs, weather, currency, guide, places }) {
   const has = {
     has_dates: !!(trip?.startDate || events.some(e=>e.start)),
-    has_stay_address: events.some(e=>e.type==='hotel' || e.locationLabel),
+    has_stay_address: events.some(e=>e.locationLabel),
     has_transport: events.some(e=>['flight','train','bus','car'].includes(e.type)),
     has_confirmation_codes: events.some(e=>e.confirmationCode),
     has_emergency_contact: false,
@@ -39,7 +39,7 @@ export async function rebuildOfflinePack(tripId) {
   const pack = {
     id:id('pack'), tripId, generatedAt:nowIso(), version:1,
     summary:{ tripTitle:trip.title, dateRange:dateRange(trip), destination:trip.destinationLabel || 'Not confirmed', readinessScore:readiness.score, status: readiness.score > 70 ? 'Ready' : readiness.score > 35 ? 'Partial' : 'Missing Critical Info' },
-    critical:{ nextEvent, stayAddress: accepted.find(e=>e.type==='hotel' || e.locationLabel)?.locationLabel || null, confirmationCodes: accepted.filter(e=>e.confirmationCode).map(e=>({title:e.title, code:e.confirmationCode})), emergencyContacts: [], insurance: docs.find(d=>d.type==='insurance') || null, documentRefs: docs.map(d=>({id:d.id,title:d.title,type:d.type,sensitive:d.sensitive})), rawProofRefs: accepted.map(e=>e.rawItemId).filter(Boolean) },
+    critical:{ nextEvent, stayAddress: accepted.find(e=>e.locationLabel)?.locationLabel || null, confirmationCodes: accepted.filter(e=>e.confirmationCode).map(e=>({title:e.title, code:e.confirmationCode})), emergencyContacts: [], insurance: docs.find(d=>d.type==='insurance') || null, documentRefs: docs.map(d=>({id:d.id,title:d.title,type:d.type,sensitive:d.sensitive})), rawProofRefs: [...new Set(accepted.map(e=>e.rawItemId).filter(Boolean))] },
     cached:{ weatherSummary: weather?.summary || null, currencyCheatSheet: currency?.cheatSheet || null, destinationMiniGuide: guide?.summary || null, essentialPlaces: places || [], phraseCards: buildPhraseCards(trip), packingCritical: weather?.packingSuggestions || [] },
     exports:{ plainText:'', markdown:'', printableHtml:'', ics:'' },
     readinessSnapshot: readiness, status: readiness.score > 70 ? 'ready' : readiness.score > 35 ? 'partial' : 'partial'

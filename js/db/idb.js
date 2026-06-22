@@ -9,8 +9,13 @@ export function openDb() {
       for (const [name, indexes] of Object.entries(STORES)) {
         const store = db.objectStoreNames.contains(name) ? req.transaction.objectStore(name) : db.createObjectStore(name, { keyPath: name === 'settings' ? 'key' : 'id' });
         for (const idx of indexes) {
-          const indexName = idx.join ? idx.join('_') : idx;
-          if (!store.indexNames.contains(indexName)) store.createIndex(indexName, idx, { unique: false });
+          const indexName = Array.isArray(idx) ? idx.join('_') : idx;
+          const keyPath = Array.isArray(idx) && idx.length === 1 ? idx[0] : idx;
+          if (store.indexNames.contains(indexName)) {
+            const existing = store.index(indexName);
+            if (JSON.stringify(existing.keyPath) !== JSON.stringify(keyPath)) store.deleteIndex(indexName);
+          }
+          if (!store.indexNames.contains(indexName)) store.createIndex(indexName, keyPath, { unique: false });
         }
       }
     };

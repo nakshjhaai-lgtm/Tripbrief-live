@@ -1,5 +1,5 @@
 export const DB_NAME = 'tripbrief-live';
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 export const STORES = {
   trips: [['status'], ['startDate'], ['updatedAt']],
   rawItems: [['tripId'], ['kind'], ['createdAt'], ['ocrStatus'], ['parseStatus'], ['hash']],
